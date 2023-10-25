@@ -55,20 +55,36 @@ class LibrosController {
 		}
 	}
 
-	async add(req, res) {
-		const libros = req.body;
-		try {
-			const [result] = await pool.query(`
+	async agregarLibro (req, res) {
+  const { nombre, autor, categoria, fechaPublicacion, isbn } = req.body;
+
+  if (!nombre || !autor || !categoria || !fechaPublicacion || !isbn) {
+    res.status(400).json({ mensaje: 'Faltan campos obligatorios en la solicitud' });
+    return;
+  }
+
+  // Verificar si existen campos adicionales no declarados
+  const camposEsperados = ['nombre', 'autor', 'categoria', 'fechaPublicacion', 'isbn'];
+  const camposAdicionales = Object.keys(req.body).filter(field => !camposEsperados.includes(field));
+
+  if (camposAdicionales.length > 0) {
+    res.status(400).json({ mensaje: 'Campos adicionales no válidos: ' + camposAdicionales.join(', ') });
+    return;
+  }
+
+  try {
+    const [result] = await pool.query(`
 				INSERT INTO libros(nombre, autor, categoria, fechaPublicacion, isbn)
 				VALUES (?, ?, ?, ?, ?)`,
 				[libros.nombre, libros.autor, libros.categoria, libros.fechaPublicacion, libros.isbn]
 			);
-			res.json({ "ID insertado": result.insertId });
-			// Mensaje para notificar al usuario que se ha insertado el registro
-		} catch (error) {
-			console.log('Error al añadir el libro:', error);
-		}
-	}
+
+    res.status(201).json({ mensaje: 'Libro agregado correctamente', id_insertado: result.insertId });
+  } catch (error) {
+    console.error('Error al agregar el libro:', error);
+    res.status(500).json({ mensaje: 'Error al agregar el libro' });
+  }
+}
 
 	async delete(req, res) {
 		const libros = req.body;
