@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-10-2023 a las 00:59:15
+-- Tiempo de generación: 25-10-2023 a las 05:41:06
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.29
 
@@ -42,8 +42,10 @@ CREATE TABLE `libros` (
 
 INSERT INTO `libros` (`id`, `nombre`, `autor`, `categoria`, `fechaPublicacion`, `isbn`) VALUES
 (1, 'rebelion en la granja', 'george orwell', 'fabula', '2013-05-15', '3457834590'),
-(2, 'buenos aires es leyenda', 'guillermo barrantes', 'misterio', '2015-10-15', '978-950-45'),
-(5, 'la oveja que vino a cenar', 'steve smallman', 'infantil', '2006-08-07', '233438934');
+(5, 'la oveja que vino a cenar', 'steve smallman', 'infantil', '2006-08-07', '233438934'),
+(7, 'el cuaderno de noah', 'nicholas sparks', 'novela', '2004-04-07', '233438438'),
+(8, 'posdata: te quiero', 'cecilia ahern', 'romantica', '2003-02-23', '2879438438'),
+(10, 'el amor en los tiempos de cole', 'gabriel garcia marquez', 'novela', '1985-04-23', '2879434908');
 
 --
 -- Índices para tablas volcadas
@@ -63,7 +65,7 @@ ALTER TABLE `libros`
 -- AUTO_INCREMENT de la tabla `libros`
 --
 ALTER TABLE `libros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
