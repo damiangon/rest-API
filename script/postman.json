@@ -1,0 +1,178 @@
+{
+	"info": {
+		"_postman_id": "7524f62a-dcd4-4b62-93a0-179a561904a3",
+		"name": "Libros API REST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30583951"
+	},
+	"item": [
+		{
+			"name": "getOne",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 3\r\n}\r\n   ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/libro",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"libro"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAll",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 8\r\n}\r\n   ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/libros",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"libros"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add nuevo libro",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"el amor en los tiempos de colera\",\r\n    \"autor\": \"gabriel garcia marquez\",\r\n    \"categoria\": \"novela\",\r\n    \"fechaPublicacion\": \"1985-04-23T03:00:00.000Z\",\r\n    \"isbn\": \"2879434908\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/libros",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"libros"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete ISBN",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"isbn\": \"978-950-45\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/libro",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"libro"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/libros",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"libros"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add error campos adicionales",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"el amor en los tiempos de colera\",\r\n    \"autor\": \"gabriel garcia marquez\",\r\n    \"categoria\": \"novela\",\r\n    \"fechaPublicacion\": \"1985-04-23T03:00:00.000Z\",\r\n    \"isbn\": \"2879434908\",\r\n    \"stock\":7,\r\n    \"precio\":\"123,45\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/libros",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"libros"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

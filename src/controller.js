@@ -2,115 +2,122 @@
 import { pool } from './database.js';
 
 class LibrosController {
+  // Elimina un libro por ISBN
+  async eliminarPorISBN(req, res) {
+    
+    const isbn = req.body.isbn;
 
-	async eliminarPorISBN(req, res) {
-  		const isbn = req.body.isbn; // Suponiendo que el ISBN se pasa en el cuerpo de la solicitud
+    // Verifica si el campo ISBN está presente en la solicitud
+    if (!isbn) {
+      res.status(400).json({ mensaje: 'Falta el campo ISBN en el cuerpo de la solicitud' });
+      return;
+    }
 
-  		if (!isbn) {
-    		res.status(400).json({ mensaje: 'Falta el campo ISBN en el cuerpo de la solicitud' });
-    		return;
-  			}
+    try {
+      // Ejecuta una consulta SQL para eliminar un libro por ISBN
+      const [result] = await pool.query('DELETE FROM libros WHERE isbn = ?', [isbn]);
 
-  		try {
-    	const [result] = await pool.query('DELETE FROM libros WHERE isbn = ?', [isbn]);
-
-    		if (result.affectedRows > 0) {
-      // Se eliminó el libro con éxito
-      		res.status(200).json({ mensaje: 'Libro eliminado correctamente' });
-    		} else {
-      // No se encontró ningún libro con el ISBN especificado
-      		res.status(404).json({ mensaje: 'No se encontró ningún libro con el ISBN especificado' });
-    	}
-  			} catch (error) {
-    		console.error('Error al eliminar el libro:', error);
-    		res.status(500).json({ mensaje: 'Error al eliminar el libro' });
-  		}
-	}
-
-	
-	async getAll(req, res) {
-		try {
-			const [result] = await pool.query(`SELECT * FROM libros`);
-			res.json(result);
-		} catch (error) {
-			console.error('Error al obtener todos los libros:', error);
-		}
-	}
-
-	
-	async getOne(req, res) {
-		const id = req.body.id;
-		try {
-			const [result] = await pool.query('SELECT * FROM libros WHERE id = ?', [id]);
-
-			if (result.length > 0) {
-				// Devuelve el libro ingresado
-				res.json(result[0]);
-			} else {
-				// Devuelve un mensaje de error si no se encuentra el libro
-				res.status(404).json({ 'Error': `No se ha encontrado un libro con el ID ingresado: ${id}` });
-			}
-		} catch (error) {
-			console.error('Error al obtener un libro:', error);
-		}
-	}
-
-	async agregarLibro (req, res) {
-  const { nombre, autor, categoria, fechaPublicacion, isbn } = req.body;
-
-  if (!nombre || !autor || !categoria || !fechaPublicacion || !isbn) {
-    res.status(400).json({ mensaje: 'Faltan campos obligatorios en la solicitud' });
-    return;
+      // Comprueba si se eliminó el libro con éxito y responde en consecuencia
+      if (result.affectedRows > 0) {
+        res.status(404).json({ mensaje: 'Libro eliminado correctamente' });
+      } else {
+        res.status(404).json({ mensaje: 'No se encontró ningún libro con el ISBN especificado' });
+      }
+    } catch (error) {
+      console.error('Error al eliminar el libro:', error);
+      res.status(500).json({ mensaje: 'Error al eliminar el libro' });
+    }
   }
 
-  // Verificar si existen campos adicionales no declarados
-  const camposEsperados = ['nombre', 'autor', 'categoria', 'fechaPublicacion', 'isbn'];
-  const camposAdicionales = Object.keys(req.body).filter(field => !camposEsperados.includes(field));
-
-  if (camposAdicionales.length > 0) {
-    res.status(400).json({ mensaje: 'Campos adicionales no válidos: ' + camposAdicionales.join(', ') });
-    return;
+  // Obtiene todos los libros
+  async getAll(req, res) {
+    try {
+      // Ejecuta una consulta SQL para obtener todos los libros
+      const [result] = await pool.query('SELECT * FROM libros');
+      // Responde con la lista de libros
+      res.json(result);
+    } catch (error) {
+      console.error('Error al obtener todos los libros:', error);
+    }
   }
 
-  try {
-    const [result] = await pool.query(`
-				INSERT INTO libros(nombre, autor, categoria, fechaPublicacion, isbn)
-				VALUES (?, ?, ?, ?, ?)`,
-				[libros.nombre, libros.autor, libros.categoria, libros.fechaPublicacion, libros.isbn]
-			);
+  // Obtiene un libro por su ID
+  async getOne(req, res) {
+    try {
+      
+      const id = req.body.id;
+      // Ejecuta una consulta SQL para obtener un libro por su ID
+      const [result] = await pool.query('SELECT * FROM libros WHERE id = ?', [id]);
 
-    res.status(201).json({ mensaje: 'Libro agregado correctamente', id_insertado: result.insertId });
-  } catch (error) {
-    console.error('Error al agregar el libro:', error);
-    res.status(500).json({ mensaje: 'Error al agregar el libro' });
+      // Comprueba si se encontró el libro y responde en consecuencia
+      if (result.length > 0) {
+        res.json(result[0]);
+      } else {
+        res.status(404).json({ 'Error': `No se ha encontrado un libro con el ID ingresado: ${id}` });
+      }
+    } catch (error) {
+      console.error('Error al obtener un libro:', error);
+    }
   }
-}
 
-	async delete(req, res) {
-		const libros = req.body;
-		try {
-			const [result] = await pool.query(`DELETE FROM libros WHERE id = ?`, [libros.id]);
-			res.json({ "Registros eliminados": result.affectedRows });
-		} catch (error) {
-			console.log('Error al eliminar un libro:', error);
-		}
-	}
+  // Agrega un libro
+  async add(req, res) {
+    try {
+      
+      const libro = req.body;
 
-	async update(req, res) {
-		const libros = req.body;
-		try {
-			const [result] = await pool.query(`
-				UPDATE libros
-				SET nombre = ?, autor = ?, categoria = ?, fechaPublicacion = ?, isbn = ?
-				WHERE id = ?`,
-				[libros.nombre, libros.autor, libros.categoria, libros.fechaPublicacion, libros.isbn, libros.id]
-			);
-			res.json({ "Registros actualizados": result.changedRows });
-		} catch (error) {
-			console.log('Error al actualizar un libro:', error);
-		}
-	}
+      // Valida si se proporcionan todos los campos obligatorios
+      if (!libro.nombre || !libro.autor || !libro.categoria || !libro.fechaPublicacion || !libro.isbn) {
+        return res.status(400).json({ mensaje: 'Faltan campos obligatorios en la solicitud' });
+      }
+
+      // Ejecuta una consulta SQL para agregar un libro a la base de datos
+      const [result] = await pool.query(`
+        INSERT INTO libros (nombre, autor, categoria, fechaPublicacion, isbn)
+        VALUES (?, ?, ?, ?, ?)`,
+        [libro.nombre, libro.autor, libro.categoria, libro.fechaPublicacion, libro.isbn]
+      );
+
+      // Responde con el ID del libro insertado
+      res.json({ "id insertado": result.insertId });
+    } catch (error) {
+      console.log('Error al añadir el libro:', error);
+      res.status(500).json({ mensaje: 'Error al añadir el libro' });
+    }
+  }
+
+  // Elimina un libro por su ID
+  async delete(req, res) {
+    try {
+      // Obtiene el libro a eliminar del cuerpo de la solicitud
+      const libro = req.body;
+      // Ejecuta una consulta SQL para eliminar un libro por su ID
+      const [result] = await pool.query('DELETE FROM libros WHERE id = ?', [libro.id]);
+      // Responde con la cantidad de registros eliminados
+      res.json({ "Registros eliminados": result.affectedRows });
+    } catch (error) {
+      console.log('Error al eliminar un libro:', error);
+    }
+  }
+
+  // Actualiza la información de un libro
+  async update(req, res) {
+    try {
+      // Obtiene los datos del libro a actualizar del cuerpo de la solicitud
+      const libro = req.body;
+      // Ejecuta una consulta SQL para actualizar la información del libro
+      const [result] = await pool.query(`
+        UPDATE libros
+        SET nombre = ?, autor = ?, categoria = ?, fechaPublicacion = ?, isbn = ?
+        WHERE id = ?`,
+        [libro.nombre, libro.autor, libro.categoria, libro.fechaPublicacion, libro.isbn, libro.id]
+      );
+      // Responde con la cantidad de registros actualizados
+      res.json({ "Registros actualizados": result.changedRows });
+    } catch (error) {
+      console.log('Error al actualizar un libro:', error);
+    }
+  }
 }
 
 export const libros = new LibrosController();
-

@@ -5,7 +5,7 @@
 
  router.get('/libros', libros.getAll);
  router.get('/libro', libros.getOne);
- router.post('/libros', libros.agregarLibro); //permitir cargar con datos la solicitud http, funcion POst
+ router.post('/libros', libros.add); //permitir cargar con datos la solicitud http, funcion POst
  router.delete('/libros', libros.delete);
  router.put('/libros', libros.update);
  router.delete('/libro', libros.eliminarPorISBN);
